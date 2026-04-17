@@ -1,257 +1,371 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 Reading Challenge</title>
-    <style>
-        :root { --bg: #f8fafc; --card: #ffffff; --border: #e2e8f0; --primary: #3b82f6; --primary-hover: #2563eb; --text: #1e293b; --muted: #64748b; --success: #10b981; --danger: #ef4444; }
-        body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.5; }
-        h1, h2, h3 { margin-top: 0; }
-        .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px; border: 1px solid var(--border); }
-        label { display: block; margin: 12px 0 6px; font-weight: 500; color: var(--muted); font-size: 14px; }
-        input, select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; box-sizing: border-box; transition: border 0.2s; }
-        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-        button { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; transition: background 0.2s; width: 100%; margin-top: 8px; }
-        button:hover { background: var(--primary-hover); }
-        button.secondary { background: #64748b; }
-        button.danger { background: var(--danger); }
-        button.small { width: auto; padding: 6px 12px; font-size: 12px; margin-top: 0; }
-        .hidden { display: none !important; }
-        .result-box { display: none; margin-top: 12px; padding: 12px; background: #f0f9ff; border: 1px solid #38bdf8; border-radius: 8px; color: #0c4a6e; }
-        .group-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); }
-        .tag { display: inline-block; padding: 2px 8px; background: #e0f2fe; color: #0369a1; border-radius: 12px; font-size: 12px; margin-left: 6px; }
-        .muted { color: var(--muted); font-size: 13px; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📚 Reading Challenge (Online)</title>
+  <style>
+    :root { --bg:#f8fafc; --card:#fff; --border:#e2e8f0; --primary:#3b82f6; --primary-hover:#2563eb; --text:#1e293b; --muted:#64748b; --success:#10b981; --danger:#ef4444; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.5; }
+    h1,h2,h3 { margin-top: 0; }
+    .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 24px; border: 1px solid var(--border); }
+    label { display: block; margin: 12px 0 6px; font-weight: 500; color: var(--muted); font-size: 14px; }
+    input, select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; box-sizing: border-box; }
+    input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    button { background: var(--primary); color: #fff; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; width: 100%; margin-top: 8px; transition: background 0.2s; }
+    button:hover { background: var(--primary-hover); }
+    button.secondary { background: #64748b; }
+    button.danger { background: var(--danger); }
+    button.small { width: auto; padding: 6px 12px; font-size: 12px; margin-top: 0; }
+    .hidden { display: none !important; }
+    .result-box { display: none; margin-top: 12px; padding: 12px; background: #f0f9ff; border: 1px solid #38bdf8; border-radius: 8px; color: #0c4a6e; }
+    .group-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); }
+    .tag { display: inline-block; padding: 2px 8px; background: #e0f2fe; color: #0369a1; border-radius: 12px; font-size: 12px; margin-left: 6px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .loader { text-align: center; padding: 10px; color: var(--muted); font-style: italic; }
+  </style>
 </head>
 <body>
-    <h1>📚 Reading Challenge</h1>
-    <p class="muted">Соревнование на объём прочитанных книг и страниц</p>
+  <h1>📚 Reading Challenge <span style="font-size:14px;color:var(--success);vertical-align:middle">● Online</span></h1>
+  <p class="muted">Соревнование на объём прочитанных книг (синхронизация в реальном времени)</p>
 
-    <!-- 🔐 Блок авторизации -->
-    <div class="card" id="authSection">
-        <h2>📝 Регистрация</h2>
-        <label>Имя: <input type="text" id="regName" placeholder="Ваше имя"></label>
-        <label>Класс/Группа: <input type="text" id="regClass" placeholder="Например: 9Б"></label>
-        <label>Email: <input type="email" id="regEmail" placeholder="email@example.com"></label>
-        <label>Пароль: <input type="password" id="regPassword"></label>
-        <button id="btnRegister">Зарегистрироваться</button>
+  <!-- 🔐 Авторизация -->
+  <div class="card" id="authSection">
+    <h2>📝 Регистрация</h2>
+    <label>Имя: <input type="text" id="regName"></label>
+    <label>Класс/Группа: <input type="text" id="regClass"></label>
+    <label>Email: <input type="email" id="regEmail"></label>
+    <label>Пароль: <input type="password" id="regPassword"></label>
+    <button id="btnRegister">Зарегистрироваться</button>
+    <hr style="margin:20px 0;border:none;border-top:1px solid var(--border)">
+    <h2>🔑 Вход</h2>
+    <label>Email: <input type="email" id="loginEmail"></label>
+    <label>Пароль: <input type="password" id="loginPassword"></label>
+    <button id="btnLogin">Войти</button>
+  </div>
 
-        <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border);">
-
-        <h2>🔑 Вход</h2>
-        <label>Email: <input type="email" id="loginEmail"></label>
-        <label>Пароль: <input type="password" id="loginPassword"></label>
-        <button id="btnLogin">Войти</button>
+  <!-- 📱 Приложение -->
+  <div class="card hidden" id="appSection">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
+      <h2>Привет, <span id="userName">...</span>!</h2>
+      <button id="btnLogout" class="danger small">Выйти</button>
     </div>
 
-    <!-- 📱 Основной интерфейс -->
-    <div class="card hidden" id="appSection">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-            <h2>Привет, <span id="userName">...</span>!</h2>
-            <button id="btnLogout" class="danger small">Выйти</button>
-        </div>
+    <h3>📖 Добавить книгу</h3>
+    <label>Название: <input type="text" id="bookTitle"></label>
+    <label>Автор: <input type="text" id="bookAuthor"></label>
+    <label>Всего страниц: <input type="number" id="bookPages" min="1"></label>
+    <label>Уже прочитано: <input type="number" id="bookRead" value="0" min="0"></label>
+    <button id="btnAddBook">Добавить</button>
+    <p class="muted" id="myBooksInfo">Мои книги: загрузка...</p>
 
-        <h3>📖 Добавить книгу</h3>
-        <label>Название: <input type="text" id="bookTitle"></label>
-        <label>Автор: <input type="text" id="bookAuthor"></label>
-        <label>Всего страниц: <input type="number" id="bookPages"></label>
-        <label>Уже прочитано: <input type="number" id="bookRead" value="0"></label>
-        <button id="btnAddBook">Добавить</button>
-        <p class="muted" id="myBooksList">Мои книги: пока пусто</p>
+    <!-- ✅ Список книг с прогрессом -->
+    <div id="booksList" style="margin-top:16px"></div>
 
-        <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border);">
-
-        <h3>👥 Группы</h3>
-        <label>Название: <input type="text" id="groupName"></label>
-        <label>Тип: 
-            <select id="groupType">
-                <option value="public">🌍 Открытая</option>
-                <option value="private">🔒 Закрытая</option>
-            </select>
-        </label>
-        <button id="btnCreateGroup">Создать группу</button>
-
-        <!-- ✅ Блок с результатом создания -->
-        <div id="createResult" class="result-box">
-            ✅ Группа создана!<br>
-            <strong>ID группы:</strong> <span id="resId" style="font-family:monospace; background:#e2e8f0; padding:2px 6px; border-radius:4px;"></span><br>
-            <strong>Код приглашения:</strong> <span id="resCode" style="font-family:monospace; background:#e2e8f0; padding:2px 6px; border-radius:4px;"></span>
-            <p class="muted" style="margin:8px 0 0;">Скопируйте эти данные и передайте участникам. Для закрытых групп код обязателен.</p>
-        </div>
-
-        <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border);">
-
-        <label>ID группы: <input type="text" id="joinGroupId" placeholder="Например: GRP-7X9K"></label>
-        <label>Код приглашения (если закрытая): <input type="text" id="joinCode" placeholder="6 символов"></label>
-        <button id="btnJoinGroup">Вступить</button>
-
-        <h3>🌍 Открытые группы</h3>
-        <div id="openGroupsList">Загрузка...</div>
-
-        <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border);">
-
-        <h3>🏆 Глобальный рейтинг</h3>
-        <div id="globalLeaderboard">Загрузка...</div>
-
-        <h3>📊 Рейтинг текущей группы</h3>
-        <div id="currentGroupLeaderboard">Вступите в группу или выберите её в списке выше</div>
+    <hr style="margin:20px 0;border:none;border-top:1px solid var(--border)">
+    <h3>👥 Группы</h3>
+    <label>Название: <input type="text" id="groupName"></label>
+    <label>Тип: <select id="groupType"><option value="public">🌍 Открытая</option><option value="private">🔒 Закрытая</option></select></label>
+    <button id="btnCreateGroup">Создать группу</button>
+    <div id="createResult" class="result-box">
+      ✅ Группа создана!<br>
+      <strong>ID:</strong> <span id="resId" style="font-family:monospace;background:#e2e8f0;padding:2px 6px;border-radius:4px"></span><br>
+      <strong>Код:</strong> <span id="resCode" style="font-family:monospace;background:#e2e8f0;padding:2px 6px;border-radius:4px"></span>
+      <p class="muted" style="margin:8px 0 0">Передайте эти данные участникам</p>
     </div>
 
-    <script>
-        // 🗄️ Хранилище (localStorage для демо)
-        const DB = {
-            get: k => JSON.parse(localStorage.getItem(k) || 'null'),
-            set: (k, v) => localStorage.setItem(k, JSON.stringify(v))
-        };
+    <hr style="margin:20px 0;border:none;border-top:1px solid var(--border)">
+    <label>ID группы: <input type="text" id="joinGroupId" placeholder="Например: GRP-7X9K"></label>
+    <label>Код приглашения (если закрытая): <input type="text" id="joinCode" placeholder="6 символов"></label>
+    <button id="btnJoinGroup">Вступить</button>
 
-        let currentUser = DB.get('currentUser');
-        let users = DB.get('users') || {};
-        let groups = DB.get('groups') || {};
+    <h3>🌍 Открытые группы</h3>
+    <div id="openGroupsList" class="loader">Загрузка...</div>
 
-        // 🎛️ Элементы DOM
-        const $ = id => document.getElementById(id);
-        const els = {
-            auth: $('authSection'), app: $('appSection'), userName: $('userName'),
-            regName: $('regName'), regClass: $('regClass'), regEmail: $('regEmail'), regPassword: $('regPassword'),
-            loginEmail: $('loginEmail'), loginPassword: $('loginPassword'),
-            groupName: $('groupName'), groupType: $('groupType'),
-            createResult: $('createResult'), resId: $('resId'), resCode: $('resCode'),
-            joinGroupId: $('joinGroupId'), joinCode: $('joinCode'),
-            openGroupsList: $('openGroupsList'), currentGroupLB: $('currentGroupLeaderboard')
-        };
+    <hr style="margin:20px 0;border:none;border-top:1px solid var(--border)">
+    <h3>📊 Рейтинг текущей группы</h3>
+    <div id="currentGroupLeaderboard" class="loader">Вступите в группу</div>
+  </div>
 
-        // 🛠️ Утилиты
-        const genCode = len => Math.random().toString(36).substring(2, 2 + len).toUpperCase();
-        const saveAll = () => { DB.set('users', users); DB.set('groups', groups); DB.set('currentUser', currentUser); };
+  <!-- Firebase SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-        // 🔐 Обновление интерфейса
-        function updateUI() {
-            if (currentUser) {
-                els.auth.classList.add('hidden');
-                els.app.classList.remove('hidden');
-                els.userName.textContent = currentUser.name;
-                renderOpenGroups();
-                loadGroupInfo();
-            } else {
-                els.auth.classList.remove('hidden');
-                els.app.classList.add('hidden');
-            }
+  <script>
+    // ⚙️ ФИКС: исправлено название проекта (challenge, а не chellenge)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAVWkALZWbnfZfrt7-5xg8ufF7NWVxBABM",
+      authDomain: "reading-chellenge-a031e.firebaseapp.com",
+      databaseURL: "https://reading-chellenge-a031e-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "reading-chellenge-a031e",
+      storageBucket: "reading-chellenge-a031e.firebasestorage.app",
+      messagingSenderId: "527539917079",
+      appId: "1:527539917079:web:e72374abf77d65d0b1e752",
+      measurementId: "G-NH1W89NBZP"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
+    const $ = id => document.getElementById(id);
+    let currentUserData = null;
+
+    // 🔐 Отслеживание авторизации
+    auth.onAuthStateChanged(async user => {
+      if (user) {
+        $('authSection').classList.add('hidden');
+        $('appSection').classList.remove('hidden');
+        await loadUserProfile(user.uid);
+        startGroupsListener();
+        startBooksListener();
+      } else {
+        $('authSection').classList.remove('hidden');
+        $('appSection').classList.add('hidden');
+        currentUserData = null;
+      }
+    });
+
+    // 👤 Загрузка профиля
+    async function loadUserProfile(uid) {
+      const snap = await db.ref('users/' + uid).once('value');
+      currentUserData = snap.val() || { name: 'Участник', group: null };
+      $('userName').textContent = currentUserData.name;
+      if (currentUserData.group) updateCurrentGroupUI(currentUserData.group);
+    }
+
+    // 📝 Регистрация
+    $('btnRegister').onclick = async () => {
+      const email = $('regEmail').value.trim();
+      const pass = $('regPassword').value;
+      const name = $('regName').value.trim();
+      const cls = $('regClass').value.trim();
+      if (!email || !pass || !name) return alert('Заполните обязательные поля');
+      try {
+        const cred = await auth.createUserWithEmailAndPassword(email, pass);
+        await db.ref('users/' + cred.user.uid).set({ name, class: cls, email, group: null, joinedAt: Date.now() });
+        alert('✅ Регистрация успешна! Теперь войдите.');
+        $('regEmail').value = $('regPassword').value = $('regName').value = '';
+      } catch (e) { alert('❌ ' + (e.message || e.code)); }
+    };
+
+    // 🔑 Вход
+    $('btnLogin').onclick = () => {
+      auth.signInWithEmailAndPassword($('loginEmail').value.trim(), $('loginPassword').value)
+        .catch(e => alert('❌ ' + (e.message || e.code)));
+    };
+
+    // 🚪 Выход
+    $('btnLogout').onclick = () => auth.signOut();
+
+    // 👥 Создание группы
+    $('btnCreateGroup').onclick = async () => {
+      if (!auth.currentUser) return alert('Сначала войдите');
+      const name = $('groupName').value.trim();
+      if (!name) return alert('Введите название группы');
+      const isPrivate = $('groupType').value === 'private';
+      const groupId = 'GRP-' + Math.random().toString(36).substring(2,8).toUpperCase();
+      const inviteCode = isPrivate ? Math.random().toString(36).substring(2,8).toUpperCase() : null;
+
+      await db.ref('groups/' + groupId).set({
+        name, type: isPrivate ? 'private' : 'public', inviteCode,
+        creator: auth.currentUser.uid, members: { [auth.currentUser.uid]: true },
+        createdAt: Date.now()
+      });
+      await db.ref('users/' + auth.currentUser.uid + '/group').set(groupId);
+      currentUserData.group = groupId;
+
+      $('resId').textContent = groupId;
+      $('resCode').textContent = inviteCode || 'Не требуется';
+      $('createResult').style.display = 'block';
+      $('groupName').value = '';
+      setTimeout(() => { $('createResult').style.display = 'none'; }, 8000);
+    };
+
+    // 🚪 Вступление в группу
+    $('btnJoinGroup').onclick = async () => {
+      if (!auth.currentUser) return alert('Сначала войдите');
+      const id = $('joinGroupId').value.trim();
+      const code = $('joinCode').value.trim();
+      if (!id) return alert('Введите ID группы');
+
+      const snap = await db.ref('groups/' + id).once('value');
+      if (!snap.exists()) return alert('❌ Группа не найдена');
+      const g = snap.val();
+
+      if (g.type === 'private' && g.inviteCode !== code) return alert('❌ Неверный код приглашения');
+      if (g.members[auth.currentUser.uid]) return alert('ℹ️ Вы уже в этой группе');
+
+      await db.ref('groups/' + id + '/members/' + auth.currentUser.uid).set(true);
+      await db.ref('users/' + auth.currentUser.uid + '/group').set(id);
+      currentUserData.group = id;
+      alert(`✅ Вы вступили в "${g.name}"!`);
+      $('joinGroupId').value = $('joinCode').value = '';
+      updateCurrentGroupUI(id);
+    };
+
+    // 📡 Слушатель групп (реальное время)
+    function startGroupsListener() {
+      db.ref('groups').on('value', snap => {
+        const groups = snap.val() || {};
+        renderOpenGroups(groups);
+        if (currentUserData?.group && groups[currentUserData.group]) {
+          updateCurrentGroupUI(currentUserData.group, groups[currentUserData.group]);
         }
+      });
+    }
 
-        // 📝 Регистрация
-        $('btnRegister').onclick = () => {
-            const { regName, regClass, regEmail, regPassword } = els;
-            if (!regName.value.trim() || !regEmail.value.trim() || !regPassword.value) return alert('Заполните обязательные поля');
-            if (users[regEmail.value]) return alert('Этот email уже зарегистрирован');
+    // 📋 Отрисовка открытых групп
+    function renderOpenGroups(groups) {
+      const list = $('openGroupsList');
+      const publics = Object.entries(groups).filter(([,g]) => g.type === 'public');
+      if (!publics.length) { list.innerHTML = '<p class="muted">Нет открытых групп</p>'; return; }
+      list.innerHTML = publics.map(([id, g]) => `
+        <div class="group-item">
+          <div><strong>${escapeHtml(g.name)}</strong> <span class="tag">${Object.keys(g.members||{}).length} уч.</span></div>
+          <button class="secondary small" onclick="document.getElementById('joinGroupId').value='${id}'">Вступить</button>
+        </div>`).join('');
+    }
+
+    // 📊 Обновление UI текущей группы
+    async function updateCurrentGroupUI(groupId, groupData = null) {
+      const board = $('currentGroupLeaderboard');
+      if (!groupId) { board.innerHTML = '<p class="muted">Вступите в группу</p>'; return; }
+      const g = groupData || await db.ref('groups/' + groupId).once('value').then(s => s.val());
+      if (!g) return;
+
+      let membersHtml = '';
+      for (const uid of Object.keys(g.members || {})) {
+        const m = await db.ref('users/' + uid).once('value').then(s => s.val());
+        membersHtml += `<span style="display:inline-block;margin:4px;padding:4px 8px;background:#f1f5f9;border-radius:6px">${escapeHtml(m?.name || '...')}</span>`;
+      }
+      board.innerHTML = `
+        <h4>📊 ${escapeHtml(g.name)} ${g.type === 'private' ? '🔒' : '🌍'}</h4>
+        <p class="muted">Участников: ${Object.keys(g.members||{}).length}</p>
+        <div style="margin-top:8px">${membersHtml}</div>`;
+    }
+
+    // 🔤 Защита от XSS
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // 📚 Книги: слушатель + отрисовка
+    function startBooksListener() {
+      if (!auth.currentUser) return;
+      
+      db.ref('books').orderByChild('userId').equalTo(auth.currentUser.uid).on('value', snap => {
+        const books = snap.val() || {};
+        const booksArr = Object.entries(books).map(([id, b]) => ({ id, ...b }));
+        
+        // Обновляем статистику
+        const count = booksArr.length;
+        const totalRead = booksArr.reduce((sum, b) => sum + (b.read||0), 0);
+        const totalPages = booksArr.reduce((sum, b) => sum + (b.pages||0), 0);
+        $('myBooksInfo').textContent = `Мои книги: ${count} шт., прочитано: ${totalRead} / ${totalPages} стр.`;
+        
+        // Отрисовываем список
+        renderBooksList(booksArr);
+      });
+    }
+
+    // 📋 Отрисовка списка книг с прогрессом
+    function renderBooksList(books) {
+      const container = $('booksList');
+      if (!books.length) {
+        container.innerHTML = '<p class="muted">📭 Пока нет добавленных книг</p>';
+        return;
+      }
+      
+      container.innerHTML = books.map(book => {
+        const pages = book.pages || 0;
+        const read = Math.min(book.read || 0, pages);
+        const left = pages - read;
+        const percent = pages > 0 ? Math.round((read / pages) * 100) : 0;
+        
+        return `
+          <div class="card" style="margin-bottom:12px;padding:14px">
+            <div style="display:flex;justify-content:space-between;align-items:start">
+              <div>
+                <strong style="font-size:15px">${escapeHtml(book.title)}</strong><br>
+                <span class="muted">👤 ${escapeHtml(book.author || 'Не указан')}</span>
+              </div>
+              <button class="danger small" onclick="deleteBook('${book.id}')">✕</button>
+            </div>
             
-            users[regEmail.value] = { name: regName.value.trim(), class: regClass.value.trim(), email: regEmail.value, pass: regPassword.value, group: null };
-            DB.set('users', users);
-            alert('✅ Регистрация успешна! Теперь войдите.');
-            regName.value = regEmail.value = regPassword.value = '';
-        };
+            <div style="margin:10px 0">
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                <span>📖 Прогресс</span>
+                <span><strong>${read}</strong> / ${pages} стр. <span class="muted">(${percent}%)</span></span>
+              </div>
+              <div style="background:#e2e8f0;border-radius:8px;height:8px;overflow:hidden">
+                <div style="background:var(--success);height:100%;width:${percent}%;transition:width 0.3s"></div>
+              </div>
+              <p class="muted" style="margin:6px 0 0;font-size:12px">
+                📊 Осталось: <strong>${left}</strong> стр.
+              </p>
+            </div>
+            
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <input type="number" id="read-${book.id}" value="${read}" min="0" max="${pages}" 
+                     style="width:100px;padding:6px 8px;font-size:12px" placeholder="Прочитано">
+              <button class="secondary small" onclick="updateBookProgress('${book.id}', ${pages})" 
+                      style="width:auto;margin:0">💾 Обновить</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
 
-        // 🔑 Вход
-        $('btnLogin').onclick = () => {
-            const email = els.loginEmail.value.trim();
-            const user = users[email];
-            if (user && user.pass === els.loginPassword.value) {
-                currentUser = { ...user };
-                saveAll();
-                updateUI();
-            } else {
-                alert('❌ Неверный email или пароль');
-            }
-        };
+    // ✏️ Обновление прогресса книги
+    window.updateBookProgress = async (bookId, maxPages) => {
+      const input = $(`read-${bookId}`);
+      const newRead = Math.max(0, Math.min(+input.value || 0, maxPages));
+      
+      await db.ref('books/' + bookId + '/read').set(newRead);
+      input.blur();
+    };
 
-        // 🚪 Выход
-        $('btnLogout').onclick = () => {
-            localStorage.removeItem('currentUser');
-            location.reload();
-        };
+    // 🗑️ Удаление книги
+    window.deleteBook = async (bookId) => {
+      if (!confirm('Удалить эту книгу?')) return;
+      await db.ref('books/' + bookId).remove();
+    };
 
-        // 👥 Создание группы
-        $('btnCreateGroup').onclick = () => {
-            if (!currentUser) return alert('Сначала войдите в аккаунт');
-            const name = els.groupName.value.trim();
-            if (!name) return alert('Введите название группы');
+    // 📚 Добавить книгу
+    $('btnAddBook').onclick = async () => {
+      if (!auth.currentUser) return alert('Сначала войдите');
+      const title = $('bookTitle').value.trim();
+      const author = $('bookAuthor').value.trim();
+      const pages = +$('bookPages').value || 0;
+      const read = +$('bookRead').value || 0;
+      
+      if (!title) return alert('Введите название книги');
+      if (!pages || pages < 1) return alert('Укажите корректное количество страниц');
 
-            const isPrivate = els.groupType.value === 'private';
-            const groupId = 'GRP-' + genCode(6);
-            const inviteCode = isPrivate ? genCode(6) : null;
-
-            groups[groupId] = {
-                id: groupId, name, type: isPrivate ? 'private' : 'public',
-                inviteCode, creator: currentUser.name, members: [currentUser.name], createdAt: new Date().toISOString()
-            };
-            currentUser.group = groupId;
-            users[currentUser.email].group = groupId;
-            saveAll();
-
-            els.resId.textContent = groupId;
-            els.resCode.textContent = inviteCode || 'Не требуется (открытая)';
-            els.createResult.style.display = 'block';
-            els.groupName.value = '';
-            renderOpenGroups();
-            loadGroupInfo();
-            alert('✅ Группа создана! ID и код показаны выше.');
-        };
-
-        // 🚪 Вступление в группу
-        $('btnJoinGroup').onclick = () => {
-            if (!currentUser) return alert('Сначала войдите в аккаунт');
-            const id = els.joinGroupId.value.trim();
-            const code = els.joinCode.value.trim();
-
-            const group = groups[id];
-            if (!group) return alert('❌ Группа не найдена. Проверьте ID.');
-            if (group.type === 'private' && group.inviteCode !== code) return alert('❌ Неверный код приглашения.');
-            if (group.members.includes(currentUser.name)) return alert('ℹ️ Вы уже в этой группе.');
-
-            group.members.push(currentUser.name);
-            currentUser.group = id;
-            users[currentUser.email].group = id;
-            saveAll();
-
-            alert(`✅ Вы вступили в группу "${group.name}"!`);
-            els.joinGroupId.value = els.joinCode.value = '';
-            loadGroupInfo();
-        };
-
-        // 📋 Отрисовка открытых групп
-        function renderOpenGroups() {
-            const publics = Object.values(groups).filter(g => g.type === 'public');
-            if (publics.length === 0) {
-                els.openGroupsList.innerHTML = '<p class="muted">Нет открытых групп. Создайте первую!</p>';
-                return;
-            }
-            els.openGroupsList.innerHTML = publics.map(g => `
-                <div class="group-item">
-                    <div><strong>${g.name}</strong> <span class="tag">${g.members.length} уч.</span></div>
-                    <button class="secondary small" onclick="document.getElementById('joinGroupId').value='${g.id}'">Вступить</button>
-                </div>
-            `).join('');
-        }
-
-        // 📊 Отображение текущей группы
-        function loadGroupInfo() {
-            const id = currentUser?.group;
-            if (!id || !groups[id]) {
-                els.currentGroupLB.innerHTML = '<p class="muted">Вы не состоите в группе.</p>';
-                return;
-            }
-            const g = groups[id];
-            els.currentGroupLB.innerHTML = `
-                <h4>📊 ${g.name} ${g.type === 'private' ? '🔒' : '🌍'}</h4>
-                <p class="muted">Участников: ${g.members.length}</p>
-                <div style="background:#f1f5f9; padding:10px; border-radius:8px; margin-top:8px;">
-                    ${g.members.map(m => `<span style="display:inline-block; margin:4px; padding:4px 8px; background:white; border-radius:4px;">${m}</span>`).join('')}
-                </div>
-            `;
-        }
-
-        // 🎬 Инициализация
-        updateUI();
-    </script>
+      try {
+        await db.ref('books').push().set({
+          userId: auth.currentUser.uid,
+          title,
+          author: author || '',
+          pages,
+          read: Math.min(read, pages),
+          addedAt: Date.now()
+        });
+        
+        // Очистка полей
+        $('bookTitle').value = '';
+        $('bookAuthor').value = '';
+        $('bookPages').value = '';
+        $('bookRead').value = '0';
+        
+      } catch (e) {
+        alert('❌ Ошибка: ' + (e.message || e.code));
+      }
+    };
+  </script>
 </body>
 </html>
